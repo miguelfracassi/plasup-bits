@@ -1,0 +1,46 @@
+{
+  "outputDirectory": "public",
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/favicon.ico",
+      "destination": "/logo.png"
+    },
+    {
+      "source": "/api/vakinha/:path*",
+      "destination": "/api/vakinha?r=:path*"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "/api/app?r=:path*"
+    },
+    {
+      "source": "/vakinhas/:slug",
+      "destination": "/vakinhas/apoio-inicial.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)\\.(css|js)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/pasupteam",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    }
+  ]
+}

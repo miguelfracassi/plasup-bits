@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><script src="/gate.js"></script><link rel="icon" type="image/png" href="/logo.png"><link rel="shortcut icon" href="/logo.png"><link rel="apple-touch-icon" href="/logo.png"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PasUp - Sua comunicação em evolução</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=5"></head><body>
+<canvas id="bg"></canvas>
+
+<div id="land">
+<nav><img src="logo.png" alt="PasUp">
+<div class="acts"><a class="btn" href="vakinhas">Apoie o PasUp</a><button class="btn" onclick="auth('login')">Entrar</button><button class="btn pri" onclick="auth('reg')">Criar conta grátis</button></div></nav>
+<main>
+<section class="hero">
+<h1>A comunicação vira<br><span class="w" id="w">organização</span>.</h1>
+<p class="sub">Planeje a comunicação da sua paróquia em um só lugar: prazos, postagens, anexos em PDF e tudo o que a equipe precisa acompanhar.</p>
+<div class="acts"><button class="btn pri" onclick="auth('reg')">Começar agora</button><button class="btn" onclick="auth('login')">Já tenho conta</button></div>
+</section>
+<section class="num rv"><div class="card"><b data-n="10">0</b>ferramentas de organização</div><div class="card"><b data-n="7">0</b>dias para formar uma sequência</div><div class="card"><b data-n="3">0</b>papéis de permissão</div><div class="card"><b>R$ 0</b>de mensalidade</div></section>
+<section class="free">
+<h2>É totalmente gratuito.</h2>
+<p>Sem mensalidade, sem plano pago e sem limite de planejamentos. Crie sua conta com os dados da sua paróquia e comece a organizar hoje.</p>
+<button class="btn" onclick="auth('reg')">Criar minha conta</button>
+</section>
+<section class="sec rv"><h2>Tudo o que a sua equipe precisa</h2>
+<div class="grid">
+<div class="card"><h3>Planejamentos</h3><p>Cadastre assunto, descrição, data e hora de cada ação da pastoral.</p></div>
+<div class="card"><h3>Prazos e atrasos</h3><p>Veja de imediato o que está atrasado, pendente ou concluído.</p></div>
+<div class="card"><h3>Importância</h3><p>Marque como baixa, média ou alta e priorize o que não pode esperar.</p></div>
+<div class="card"><h3>Anexos em PDF</h3><p>Guarde o planejamento completo junto com o item e baixe quando precisar.</p></div>
+<div class="card"><h3>Postagens</h3><p>Organize o calendário de publicações das redes da paróquia.</p></div>
+<div class="card"><h3>Equipe da paróquia</h3><p>Convide membros por link, veja os itens de todos e acompanhe o ranking.</p></div>
+<div class="card"><h3>Editar e excluir</h3><p>Ajuste qualquer item a qualquer momento, sem burocracia.</p></div>
+<div class="card"><h3>Responsável e conversa</h3><p>Cada item mostra quem cuida dele e guarda a conversa da equipe em balões.</p></div>
+<div class="card"><h3>Calendário litúrgico</h3><p>As cores do Advento, Natal, Quaresma e Páscoa aparecem direto no calendário.</p></div>
+<div class="card"><h3>Avisos da semana</h3><p>Os eventos viram o texto pronto, com botão para copiar ou enviar no WhatsApp.</p></div>
+<div class="card"><h3>Etiquetas por pastoral</h3><p>Etiquetas coloridas e filtros para destacar só o que importa.</p></div>
+<div class="card"><h3>Permissões</h3><p>Coordenador, membro e somente leitura, cada um com o seu acesso.</p></div>
+<div class="card"><h3>Selos e sequência</h3><p>Entregue todos os dias e veja a sequência e os selos subirem até 7 dias.</p></div>
+<div class="card"><h3>Histórico</h3><p>Uma linha do tempo registra quem mudou o quê e quando.</p></div>
+</div></section>
+<section class="sec rv"><h2>Como começar</h2><p class="sub2">Em três passos a sua equipe já está organizada.</p><div class="grid stp"><div class="card"><h3>Crie a conta</h3><p>Use os dados da sua comunidade. Leva menos de um minuto.</p></div><div class="card"><h3>Convide a equipe</h3><p>Compartilhe o link de convite e cada pessoa entra no seu papel.</p></div><div class="card"><h3>Planeje e entregue</h3><p>Cadastre os itens, acompanhe os prazos e mantenha a sequência.</p></div></div></section>
+<section class="sec rv"><h2>Perguntas frequentes</h2><div class="fq" style="margin-top:22px"><details><summary>O PasUp é gratuito?</summary><p>Sim. Não há mensalidade nem plano pago.</p></details><details><summary>Preciso instalar algum aplicativo?</summary><p>Não. Funciona no navegador do celular ou do computador.</p></details><details><summary>Quem pode ver os meus itens?</summary><p>Só você, ou a sua equipe quando o item estiver como visível. Itens privados ficam só com você.</p></details><details><summary>O PasUp tem ligação com alguma igreja ou plataforma?</summary><p>Não. É um projeto independente, sem vínculo com plataformas de pastoral, dioceses ou igrejas.</p></details></div></section>
+</main>
+<footer><img src="logo.png" alt="PasUp" style="height:46px;mix-blend-mode:multiply;display:block;margin-bottom:8px"><a href="termos">Termos de Serviço</a><a href="privacidade">Política de Privacidade</a></footer>
+</div>
+
+<div class="ov" id="ov"><form class="md" id="md"></form></div>
+
+<script src="common.js"></script><script>/* palavras */
+document.querySelectorAll('.num b[data-n]').forEach(e=>{const n=+e.dataset.n;let i=0;const t=setInterval(()=>{e.textContent=++i;if(i>=n)clearInterval(t)},110)});
+const W=['organização','conexão','inovação','experiência','estratégia','resultado','evolução','possibilidades','simplicidade','transformação'];let wi=0;
+setInterval(()=>{const w=$('w');w.classList.add('out');setTimeout(()=>{wi=(wi+1)%W.length;w.textContent=W[wi];w.classList.remove('out')},450)},2600);
+
+function auth(t){const tabs=`<img src="logo.png" alt="PasUp" class="ml"><div class="tabs"><button type="button" class="btn ${t==='reg'?'on':''}" onclick="auth('reg')">Criar conta</button><button type="button" class="btn ${t==='login'?'on':''}" onclick="auth('login')">Entrar</button></div>`;
+if(t==='reg')modal('Crie sua conta gratuita',[...CAD,['email','E-mail','email'],['senha','Senha','password'],['conf','Confirmar senha','password']],{},async o=>{
+if(o.senha!==o.conf)throw Error('As senhas não coincidem');if(!$('ac').checked)throw Error('Para continuar, aceite os termos de serviço e a política de privacidade');enter(await api('auth/register','POST',o))},
+{head:tabs,btn:'Criar conta',extra:`<label class="ck"><input type="checkbox" id="ac">Li e aceito os <a href="termos" target="_blank">Termos de Serviço</a> e a <a href="privacidade" target="_blank">Política de Privacidade</a> do PasUp.</label>`});
+else modal('Entre na sua conta',[['email','E-mail','email'],['senha','Senha','password']],{},async o=>enter(await api('auth/login','POST',o)),{head:tabs,btn:'Entrar'})}
+function enter(r){localStorage.tk=r.token;const c=localStorage.convite;location.href=c?'convite?c='+c:'painel'}
+if(tk)document.querySelector('#land nav .acts').innerHTML='<a class="btn pri" href="painel">Ir para o painel</a>';
+</script></body></html>

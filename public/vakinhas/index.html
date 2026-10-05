@@ -1,0 +1,9 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><script src="/gate.js"></script><link rel="icon" type="image/png" href="/logo.png"><link rel="shortcut icon" href="/logo.png"><link rel="apple-touch-icon" href="/logo.png"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vakinhas - PasUp</title><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="../style.css"></head><body>
+<header class="hdr" id="h"></header>
+<main class="wrap"><h2 class="hi">Apoie o PasUp</h2><p class="mut">Escolha qual vakinha você quer apoiar.</p><div style="margin-top:20px" id="ls"><p class="mut">Carregando...</p></div></main>
+<script src="../common.js"></script><script src="../vakinha.js"></script><script>
+$('h').innerHTML=`<a href="${B}"><img src="${B}logo.png" alt="PasUp"></a><a class="btn" href="${B}">Voltar ao início</a>`;
+(async()=>{try{const L=await api('vakinha?r=lista');
+$('ls').innerHTML=L.map(v=>`<a class="card vk" href="${B}vakinhas/${encodeURIComponent(v.slug)}"><h3>${esc(v.titulo)}</h3><p class="mut">${esc(v.descricao)}</p><b class="pr">${brl(v.meta_cents)}</b><div class="pb"><i style="width:${pct(v)}%"></i></div><span class="mut">${v.apoiadores} apoiador(es). Faltam ${brl(falta(v))}.</span></a>`).join('')||'<p class="mut">Nenhuma vakinha ativa no momento.</p>'}
+catch(e){$('ls').innerHTML=`<p class="err">${esc(e.message)}</p>`}})();
+</script></body></html>

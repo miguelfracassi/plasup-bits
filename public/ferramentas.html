@@ -1,0 +1,28 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><script src="/gate.js"></script><link rel="icon" type="image/png" href="/logo.png"><link rel="shortcut icon" href="/logo.png"><link rel="apple-touch-icon" href="/logo.png"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ferramentas - PasUp</title><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=5"><style>.cc{display:block;color:inherit;text-decoration:none}.cc:hover{border-color:var(--b)}textarea.big{min-height:120px}.cn2{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}.cn2 span{font-size:.85rem}.over{color:#c62828;font-weight:600}</style></head><body><main class="wrap"><h2 class="hi">Ferramentas</h2><p class="mut">Tudo o que ajuda no dia a dia da comunicação, além dos planejamentos.</p>
+<h2 class="s">Organização</h2><div class="grid">
+<a class="card cc" href="avisos"><h3>Avisos da semana</h3><p>Os eventos viram um texto pronto para copiar e enviar.</p></a><a class="card cc" href="historico"><h3>Histórico</h3><p>Linha do tempo de quem mudou o quê e quando.</p></a><a class="card cc" href="equipe"><h3>Permissões da equipe</h3><p>Coordenador, membro e somente leitura.</p></a><a class="card cc" href="quadro"><h3>Quadro</h3><p>Arraste os itens entre pendente, em andamento e concluído.</p></a>
+<a class="card cc" href="extras?k=checklist"><h3>Checklists</h3><p>Cobertura de evento, transmissão ao vivo e antes de postar.</p></a>
+<a class="card cc" href="extras?k=escala"><h3>Escala de cobertura</h3><p>Quem faz foto, vídeo e transmissão em cada evento.</p></a>
+<a class="card cc" href="extras?k=ideia"><h3>Banco de ideias</h3><p>Guarde ideias de posts e ações para usar depois.</p></a>
+<a class="card cc" href="extras?k=nota"><h3>Notas e atas</h3><p>Registre reuniões, decisões e combinados.</p></a>
+<a class="card cc" href="extras?k=contato"><h3>Contatos úteis</h3><p>Fotógrafos, gráficas, coordenadores e grupos.</p></a>
+</div>
+<h2 class="s">Conteúdo</h2><div class="grid">
+<a class="card cc" href="extras?k=modelo"><h3>Modelos de texto</h3><p>Avisos, convites e legendas prontas para copiar.</p></a>
+<a class="card cc" href="datas"><h3>Datas importantes</h3><p>Datas fixas do ano para criar postagens com antecedência.</p></a>
+<a class="card cc" href="guia"><h3>Guia de boas práticas</h3><p>Tamanhos de imagem, rotina semanal e cuidados com fotos.</p></a>
+</div>
+<h2 class="s">Utilitários</h2><div class="two">
+<div class="card"><h3>Contador de caracteres</h3><p>Cole sua legenda e veja se cabe em cada rede.</p><textarea id="tx" class="big" oninput="cnt()" placeholder="Cole ou digite o texto aqui"></textarea><div class="cn2" id="cn"></div></div>
+<div class="card"><h3>Link direto para WhatsApp</h3><p>Crie um link que abre uma conversa já com a mensagem pronta.</p><label>Número com DDD<input id="wn" placeholder="11999999999" inputmode="numeric"></label><label>Mensagem<textarea id="wm" rows="3"></textarea></label><div class="lk"><input id="wl" readonly placeholder="O link aparece aqui" onclick="this.select()"><button class="btn pri" onclick="wa()">Gerar e copiar</button></div></div>
+<div class="card"><h3>Organizador de hashtags</h3><p>Cole hashtags soltas: removemos repetidas e deixamos no formato certo.</p><textarea id="ht" rows="3" placeholder="#paroquia, comunidade, #fé"></textarea><div class="lk"><button class="btn" onclick="hs()">Organizar</button><button class="btn" onclick="navigator.clipboard.writeText($('ht').value)">Copiar</button></div><p class="mut" id="hc"></p></div>
+<div class="card"><h3>Cronômetro de reunião</h3><p>Controle o tempo de cada ponto da pauta.</p><div class="hi" id="cr" style="margin:6px 0">00:00</div><div class="acts"><button class="btn pri" onclick="cr(1)">Iniciar</button><button class="btn" onclick="cr(0)">Pausar</button><button class="btn" onclick="cr(2)">Zerar</button></div></div>
+</div></main><script src="common.js"></script><script>
+shell('ferramentas');
+const R=[['Instagram (legenda)',2200],['X / Twitter',280],['YouTube (título)',100],['WhatsApp (status)',700]];
+function cnt(){const n=$('tx').value.length;$('cn').innerHTML=`<span><b>${n}</b> caracteres</span><span><b>${($('tx').value.trim().match(/\S+/g)||[]).length}</b> palavras</span>`+R.map(([l,m])=>`<span class="${n>m?'over':''}">${l}: ${n}/${m}</span>`).join('')}cnt();
+function wa(){const n=$('wn').value.replace(/\D/g,'');if(n.length<10)return alert('Digite o número com DDD');const l='https://wa.me/'+(n.length<=11?'55':'')+n+($('wm').value?'?text='+encodeURIComponent($('wm').value):'');$('wl').value=l;navigator.clipboard.writeText(l)}
+function hs(){const a=[...new Set(($('ht').value.match(/[^\s,;#]+/g)||[]).map(x=>'#'+x.toLowerCase()))];$('ht').value=a.join(' ');$('hc').textContent=a.length+' hashtags'+(a.length>30?' (o Instagram aceita até 30)':'')}
+let t=0,iv=null;const sh=()=>$('cr').textContent=String(t/60|0).padStart(2,'0')+':'+String(t%60).padStart(2,'0');
+function cr(a){clearInterval(iv);iv=null;if(a===1)iv=setInterval(()=>{t++;sh()},1000);if(a===2){t=0;sh()}}
+</script></body></html>

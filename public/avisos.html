@@ -1,0 +1,16 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><script src="/gate.js"></script><link rel="icon" type="image/png" href="/logo.png"><link rel="shortcut icon" href="/logo.png"><link rel="apple-touch-icon" href="/logo.png"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Avisos da semana - PasUp</title><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=5"></head><body><main class="wrap"><h2 class="hi">Avisos da semana</h2><p class="mut">Os itens com data viram um texto pronto para colar nos grupos e nas redes.</p>
+<div class="bar" style="margin-top:16px"><button class="btn" onclick="sem(-1)">Semana anterior</button><b id="rg" style="align-self:center"></b><button class="btn" onclick="sem(1)">Próxima semana</button><select id="ft" onchange="gera()"><option value="">Planejamentos e postagens</option><option value="planejamento">Só planejamentos</option><option value="postagem">Só postagens</option></select></div>
+<div class="card"><textarea id="tx" rows="16" style="font-size:.95rem"></textarea><div class="row"><button class="btn" onclick="zap()">Abrir no WhatsApp</button><button class="btn pri" onclick="cop()">Copiar</button></div></div></main><script src="common.js"></script><script>
+let off=0;const z=n=>String(n).padStart(2,'0'),DS=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+(async()=>{if(!await shell('ferramentas'))return;let t=[];try{t=(await api('team/itens'))}catch(e){}const m=await api('plans');P=[...m,...t.filter(x=>x.user_id!==me.id)];gera()})();
+const sem=n=>{off+=n;gera()};
+function gera(){const h=new Date();h.setHours(0,0,0,0);const i=new Date(h.getTime()-h.getDay()*864e5+off*7*864e5),f=new Date(i.getTime()+7*864e5-1),d=x=>`${z(x.getDate())}/${z(x.getMonth()+1)}`,tp=$('ft').value;
+$('rg').textContent=`${d(i)} a ${d(new Date(f))}`;
+const L=P.filter(p=>p.data_hora&&p.status!=='concluido'&&new Date(p.data_hora)>=i&&new Date(p.data_hora)<=f&&(!tp||p.tipo===tp)&&p.visib!=='privado'||p.data_hora&&p.status!=='concluido'&&new Date(p.data_hora)>=i&&new Date(p.data_hora)<=f&&(!tp||p.tipo===tp)&&p.user_id===undefined).sort((a,b)=>new Date(a.data_hora)-new Date(b.data_hora));
+let t=`*Avisos da semana (${d(i)} a ${d(new Date(f))})*\n`;
+if(!L.length)t+='\nNenhum aviso cadastrado para esta semana.\n';
+let dia='';for(const p of L){const x=new Date(p.data_hora),k=`${DS[x.getDay()]}, ${d(x)}`;if(k!==dia){t+=`\n*${k}*\n`;dia=k}t+=`- ${z(x.getHours())}:${z(x.getMinutes())} ${p.titulo}${p.responsavel?' (resp.: '+p.responsavel+')':''}\n`}
+t+='\nContamos com a presença de todos!';$('tx').value=t}
+const cop=()=>navigator.clipboard.writeText($('tx').value).then(()=>alert('Texto copiado!'));
+const zap=()=>open('https://wa.me/?text='+encodeURIComponent($('tx').value),'_blank');
+</script></body></html>

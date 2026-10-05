@@ -1,0 +1,27 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><script src="/gate.js"></script><link rel="icon" type="image/png" href="/logo.png"><link rel="shortcut icon" href="/logo.png"><link rel="apple-touch-icon" href="/logo.png"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Painel - PasUp</title><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=5"></head><body><main class="wrap"><h2 class="hi" id="hi"></h2><p class="mut" id="sb"></p><div id="al"></div><div class="stats" id="st"></div>
+<div class="acts"><button class="btn pri" onclick="novo()">Novo item</button><a class="btn" href="itens?tipo=planejamento">Planejamentos</a><a class="btn" href="itens?tipo=postagem">Postagens</a><a class="btn" href="calendario">Calendário</a><a class="btn" href="quadro">Quadro</a><a class="btn" href="ferramentas">Ferramentas</a></div>
+<div class="card" id="sq" style="margin-top:16px"></div><div class="two"><div class="card" id="pg"></div><div class="card" id="im"></div></div>
+<h2 class="s">Atrasados</h2><div id="at"></div><h2 class="s">Hoje</h2><div id="hj"></div><h2 class="s">Próximos 7 dias</h2><div id="sm"></div><h2 class="s">Mais adiante</h2><div id="pr"></div></main><script src="common.js"></script><script>
+(async()=>{const u=await shell('painel');if(!u)return;$('hi').textContent=`${saud()}, ${u.nome.split(' ')[0]}!`;$('sb').textContent=`${u.cargo} - ${u.paroquia} (${u.diocese})`;load()})();
+const dk=d=>{d=new Date(d);return new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime()};
+function streak(L){const C=L.filter(p=>p.concluido_em&&p.status==='concluido'),D=new Set(C.map(p=>dk(p.concluido_em))),DAY=864e5,h=dk(Date.now());
+let s=0,t=D.has(h)?h:h-DAY;while(D.has(t)){s++;t-=DAY}
+const ds=[...D].sort(),best=ds.reduce((a,x,i)=>{const r=i&&x-ds[i-1]===DAY?a.r+1:1;return{r,m:Math.max(a.m,r)}},{r:0,m:0}).m;
+const nt=C.filter(p=>p.data_hora&&new Date(p.concluido_em)<=new Date(p.data_hora)).length;
+const B=[['🌱','Primeira entrega',C.length>=1],['🔥','3 dias seguidos',best>=3],['🏆','Semana completa',best>=7],['⭐','10 entregas',C.length>=10],['⏱','5 no prazo',nt>=5]];
+const dias=Array.from({length:7},(_,i)=>h-(6-i)*DAY);
+$('sq').innerHTML=`<h3>Sequência de entregas</h3><div style="display:flex;align-items:flex-end;gap:12px"><div class="sn" id="sn">0</div><p class="mut" style="margin-bottom:4px">${s===1?'dia':'dias'} seguidos · melhor: ${best}</p></div><div class="sq">${dias.map(x=>`<i>${['D','S','T','Q','Q','S','S'][new Date(x).getDay()]}</i>`).join('')}</div><div class="sl">${B.map(b=>`<div><b>${b[0]}</b>${b[1]}</div>`).join('')}</div>`;
+const dt=[...$('sq').querySelectorAll('.sq i')],bs=[...$('sq').querySelectorAll('.sl div')];
+for(let i=0;i<s&&i<1000;i++)setTimeout(()=>{$('sn').textContent=i+1},120*i);if(!s)$('sn').textContent='0';
+dias.forEach((x,i)=>setTimeout(()=>{if(D.has(x))dt[i].classList.add('on')},150*i));
+B.forEach((b,i)=>setTimeout(()=>{if(b[2])bs[i].classList.add('on')},1100+250*i))}
+async function load(){P=await api('plans');stats(P);streak(P);
+const ab=P.filter(p=>p.status!=='concluido'),pc=P.length?Math.round(100*(P.length-ab.length)/P.length):0,at=P.filter(late);
+$('al').innerHTML=at.length?`<div class="card alerta"><b>${at.length} ${at.length>1?'itens atrasados':'item atrasado'}.</b> Revise os prazos ou conclua o que já foi feito.</div>`:'';
+$('pg').innerHTML=`<h3>Progresso geral</h3><div class="pb"><i style="width:${pc}%"></i></div><p class="mut">${pc}% concluído (${P.length-ab.length} de ${P.length})</p>`;
+$('im').innerHTML='<h3>Em aberto por importância</h3>'+[['alta','Alta'],['media','Média'],['baixa','Baixa']].map(([k,l])=>{const n=ab.filter(p=>p.importancia===k).length;return `<div class="ib"><span>${l}</span><div class="pb ${k}"><i style="width:${ab.length?100*n/ab.length:0}%"></i></div><b>${n}</b></div>`}).join('');
+const f=p=>p.status!=='concluido'&&p.data_hora&&!late(p),d0=new Date();d0.setHours(23,59,59,999);const w=new Date(Date.now()+7*864e5),dt=p=>new Date(p.data_hora);
+$('at').innerHTML=at.map(card).join('')||'<p class="mut">Nenhum item atrasado. Tudo em dia.</p>';
+$('hj').innerHTML=P.filter(p=>f(p)&&dt(p)<=d0).map(card).join('')||'<p class="mut">Nada para hoje.</p>';
+$('sm').innerHTML=P.filter(p=>f(p)&&dt(p)>d0&&dt(p)<=w).map(card).join('')||'<p class="mut">Nada nos próximos 7 dias.</p>';
+$('pr').innerHTML=P.filter(p=>f(p)&&dt(p)>w).slice(0,5).map(card).join('')||'<p class="mut">Nenhum prazo mais distante.</p>'}</script></body></html>

@@ -1,0 +1,28 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><script src="/gate.js"></script><link rel="icon" type="image/png" href="/logo.png"><link rel="shortcut icon" href="/logo.png"><link rel="apple-touch-icon" href="/logo.png"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Apoiar - PasUp</title><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="../style.css"></head><body>
+<header class="hdr" id="h"></header>
+<main class="wrap"><div id="info"></div>
+<div class="card" id="fm" style="margin-top:16px"></div></main>
+<script src="../common.js"></script><script src="../vakinha.js"></script><script>
+$('h').innerHTML=`<a href="${B}"><img src="${B}logo.png" alt="PasUp"></a><a class="btn" href="${B}vakinhas">Ver outras vakinhas</a>`;
+const SL=(()=>{const s=location.pathname.split('/').filter(Boolean),i=s.lastIndexOf('vakinhas'),x=s[i+1];return x&&x!=='index.html'?x:'apoio-inicial'})();let V,tm;
+(async()=>{await load();if(!V)return;form();
+if(tk){try{const u=(await api('me')).user;$('nome').value=u.nome||'';$('email').value=u.email||'';$('tel').value=u.telefone||''}catch(e){}}})();
+async function load(){try{const r=await api('vakinha?r=item/'+encodeURIComponent(SL));V=r.vakinha;
+$('info').innerHTML=`<h2 class="hi">${esc(V.titulo)}</h2><p class="mut">${esc(V.descricao)}</p>
+<div class="two"><div class="card"><h3>Quantos faltam</h3><div class="pb"><i style="width:${pct(V)}%"></i></div><p><b>${brl(falta(V))}</b> para chegar a ${brl(V.meta_cents)}</p><p class="mut">${brl(V.arrecadado)} arrecadados</p></div>
+<div class="card"><h3>Quem apoiou</h3>${r.apoiadores.length?`<div class="nm">${r.apoiadores.map(n=>`<span class="tg">${esc(n)}</span>`).join('')}</div>`:'<p class="mut">Ninguém apoiou ainda. Seja a primeira pessoa.</p>'}</div></div>`}
+catch(e){V=null;$('info').innerHTML='';$('fm').innerHTML='<h3>Vakinha não encontrada</h3><p class="mut">Esta vakinha não existe ou foi encerrada.</p><div class="acts" style="margin-top:14px"><a class="btn pri" href="${B}vakinhas">Ver vakinhas</a></div>'}}
+function form(){if(!falta(V)){$('fm').innerHTML='<h3>Meta atingida!</h3><p class="mut">Esta vakinha já alcançou o valor. Obrigado a todas as pessoas que apoiaram.</p>';return}
+$('fm').innerHTML=`<p>Sem reembolso ou estorno caso se arrependa do pagamento.</p>
+<p style="margin-top:10px"><span class="gr">Conquista e Benefício:</span> Ganha plano BETA com atualizações antes e ganha seu nome e Instagram na página inicial do site.</p>
+${tk?'':`<p class="mut" style="margin-top:10px"><a href="${B}" style="color:var(--b)">Entre na sua conta</a> para preencher os dados automaticamente.</p>`}
+<form id="pf" onsubmit="pix(event)"><label>Nome<input id="nome" required autocomplete="name"></label><label>E-mail<input id="email" type="email" required autocomplete="email"></label><label>Telefone<input id="tel" type="tel" required autocomplete="tel"></label><label>Instagram (opcional, aparece na página inicial)<input id="insta" placeholder="@seuinstagram"></label><label>Valor (de ${brl(Math.min(V.valor_cents,falta(V)))} até ${brl(falta(V))})<input id="valor" inputmode="decimal" required value="${(falta(V)/100).toFixed(2).replace('.',',')}"></label><label class="ck"><input type="checkbox" id="ac" required>Li e aceito os <a href="${B}termos" target="_blank">Termos de Serviço</a> e a <a href="${B}privacidade" target="_blank">Política de Privacidade</a>, inclusive que não há reembolso nem estorno.</label>
+<p class="err" id="er"></p><div class="row"><button class="btn pri" id="bt">Criar Pix</button></div></form>`}
+async function pix(e){e.preventDefault();$('er').textContent='';$('bt').disabled=true;
+try{mostra(await api('vakinha?r=pix','POST',{slug:SL,nome:$('nome').value,email:$('email').value,telefone:$('tel').value,instagram:$('insta').value,valor:$('valor').value,aceite:$('ac').checked}))}
+catch(x){$('er').textContent=x.message;$('bt').disabled=false}}
+function mostra(r){$('fm').innerHTML=`<div class="qr"><h3>Pague ${brl(r.valor_cents)} com Pix</h3><p class="mut">Abra o app do seu banco e escaneie o QR Code, ou use o Pix copia e cola.</p><img src="data:image/png;base64,${r.qr_base64}" alt="QR Code do Pix"><textarea id="cc" rows="3" readonly onclick="this.select()">${esc(r.qr_code)}</textarea><button class="btn" onclick="navigator.clipboard.writeText($('cc').value).then(()=>this.textContent='Código copiado')">Copiar código Pix</button><p class="mut" id="ws" style="margin-top:14px">Aguardando o pagamento. Esta página atualiza sozinha.</p></div>`;
+clearInterval(tm);tm=setInterval(async()=>{try{const s=await api('vakinha?r=status/'+r.ref);
+if(s.status==='aprovado'){clearInterval(tm);$('fm').innerHTML=`<div class="ok" style="padding-left:14px"><h3>Pagamento aprovado!</h3><p>Obrigado por apoiar, ${esc(s.nome.split(' ')[0])}. Seu apoio foi registrado e o benefício BETA será liberado para você.</p><div class="acts" style="margin-top:14px"><a class="btn pri" href="${B}vakinhas">Ver vakinhas</a></div></div>`;load()}
+else if(s.status==='cancelado'){clearInterval(tm);$('fm').innerHTML='<h3>Pix cancelado ou expirado</h3><p class="mut">Nenhum valor foi cobrado. Gere um novo Pix para apoiar.</p><div class="acts" style="margin-top:14px"><button class="btn pri" onclick="form()">Gerar novo Pix</button></div>'}}catch(e){}},4000)}
+</script></body></html>
