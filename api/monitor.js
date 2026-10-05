@@ -77,6 +77,9 @@ export default async function handler(req, res) {
         LEFT JOIN comup_log l ON date_trunc('hour', l.created_at) = g.h
         GROUP BY g.h ORDER BY g.h`,
       recentes: () => sql`SELECT id, nome, cargo, paroquia, diocese, created_at FROM comup_users ORDER BY id DESC LIMIT 8`,
+      acoes: () => sql`SELECT acao AS nome, count(*)::int AS n FROM comup_log WHERE created_at > now() - interval '24 hours' GROUP BY acao ORDER BY n DESC LIMIT 6`,
+      paroquias: () => sql`SELECT paroquia AS nome, count(*)::int AS n FROM comup_users WHERE coalesce(trim(paroquia), '') <> '' GROUP BY paroquia ORDER BY n DESC LIMIT 6`,
+      tipos: () => sql`SELECT coalesce(tipo, 'outro') AS nome, count(*)::int AS n FROM comup_plans GROUP BY tipo ORDER BY n DESC LIMIT 6`,
       banco: async () => (await sql`SELECT pg_database_size(current_database())::bigint AS bytes`)[0],
       vakinha: async () => (await sql`SELECT
         count(*)::int AS total,
@@ -85,7 +88,7 @@ export default async function handler(req, res) {
         coalesce(sum(valor_cents) FILTER (WHERE status = 'pago'), 0)::bigint AS pago_cents
         FROM comup_apoios`)[0]
     };
-    const vazios = { ping: null, contagens: null, ativos: null, online: [], feed: [], cadastros: [], porHora: [], recentes: [], banco: null, vakinha: null };
+    const vazios = { ping: null, contagens: null, ativos: null, online: [], feed: [], cadastros: [], porHora: [], recentes: [], acoes: [], paroquias: [], tipos: [], banco: null, vakinha: null };
 
     await Promise.all(Object.keys(jobs).map(async k => { q[k] = await medir(jobs[k], vazios[k]); }));
 
@@ -119,6 +122,9 @@ export default async function handler(req, res) {
       cadastros: q.cadastros.v,
       porHora: q.porHora.v,
       recentes: q.recentes.v,
+      acoes: q.acoes.v,
+      paroquias: q.paroquias.v,
+      tipos: q.tipos.v,
       banco,
       vakinha: vk
     });
